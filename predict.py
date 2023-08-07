@@ -96,6 +96,11 @@ def main():
         zip_ref = zipfile.ZipFile(retrival_name, 'r')
         zip_ref.extractall(os.environ['RESULTS_FOLDER'])
         zip_ref.close()
+        # Zip folder tree does not match intended model location. Find model folder and move to correct dir.
+        for root, dirs, _ in os.walk(os.environ['RESULTS_FOLDER']):
+            if 'Task{0}_{1}_{2}ch'.format(task_name, dataset_name, num_channels) in dirs:
+                os.rename(os.path.join(root, 'Task{0}_{1}_{2}ch'.format(task_name, dataset_name, num_channels)), os.path.join(os.environ['RESULTS_FOLDER'], 'nnUNet', model, 'Task{0}_{1}_{2}ch'.format(task_name, dataset_name, num_channels)))
+                break
         os.system('chmod -R 755 {0}'.format(os.environ['RESULTS_FOLDER']))
         logging.info('model is downloaded.')
     
